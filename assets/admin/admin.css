@@ -1,0 +1,973 @@
+/**
+ * DSK Admin — Main Stylesheet
+ *
+ * Table of Contents:
+ *   1.  Variables & Themes
+ *   2.  Base
+ *   3.  Layout
+ *   4.  Sidebar & Navigation
+ *   5.  Sidebar Collapse
+ *   6.  Tab Content
+ *   7.  Cards
+ *   8.  Lists
+ *   9.  Forms & Inputs
+ *   10. Buttons
+ *   11. Badge
+ *   12. Toggle Switch
+ *   13. Collapsible
+ *   14. Loaders
+ *   15. Modules / Dashboard
+ *   16. Settings Tabs
+ *   17. Select2 Overrides
+ *
+ * @package DSK
+ * @since   1.0.0
+ */
+
+
+/* =============================================================================
+   1. Variables & Themes
+   ============================================================================= */
+
+/* Light (default) */
+:root {
+    --dsk-green:        #95F0B9;
+    --dsk-green-dark:   #4ac578;
+    --dsk-radius:       12px;
+    --dsk-radius-sm:    8px;
+    --dsk-radius-xs:    6px;
+
+    --dsk-bg:           #f4f4f5;
+    --dsk-surface:      #ffffff;
+    --dsk-surface-2:    #f8f8f9;
+    --dsk-surface-3:    #f0f0f2;
+    --dsk-surface-green:#C3F7D5;
+    --dsk-surface-neg  :#1a1a1a;
+
+    --dsk-border:       #e4e4e7;
+    --dsk-border-hover: #c4c4c8;
+    --dsk-border-active: #4ac578;
+
+    --dsk-text:         #111827;
+    --dsk-text-2:       #374151;
+    --dsk-text-muted:   #6b7280;
+    --dsk-text-faint:   #9ca3af;
+    --dsk-text-neg:     #fff;
+
+    --dsk-shadow:       0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --dsk-shadow-md:    0 4px 12px rgba(0,0,0,.08);
+}
+
+/* Dark */
+:root.is-dsk-dark {
+    --dsk-green:        #4ac578;
+    --dsk-green-dark:   #4ac578;
+
+    --dsk-bg:           #222222;
+    --dsk-surface:      #1d2327;
+    --dsk-surface-2:    #333333;
+    --dsk-surface-3:    #3a3a3a;
+    --dsk-surface-green:#10331d;
+    --dsk-surface-neg  :#333333;
+
+    --dsk-border:       rgba(255,255,255,.08);
+    --dsk-border-hover: rgba(255,255,255,.16);
+    --dsk-border-active: #4ac578;
+
+    --dsk-text:         #f0f0f0;
+    --dsk-text-2:       #d1d5db;
+    --dsk-text-muted:   #888888;
+    --dsk-text-faint:   #444444;
+    --dsk-text-neg:     #fff;
+
+    --dsk-shadow:       0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+    --dsk-shadow-md:    0 4px 16px rgba(0,0,0,.4);
+}
+
+
+/* =============================================================================
+   2. Base
+   ============================================================================= */
+
+.dsk-admin {
+    display: flex;
+    height: calc(100vh - 80px);
+    padding: 24px 0;
+    margin: 0;
+    font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: transparent;
+    color: var(--dsk-text);
+}
+
+.dsk-admin *,
+.dsk-admin *::before,
+.dsk-admin *::after {
+    box-sizing: border-box;
+}
+
+/* Kill WP global focus style that flattens border-radius on any <a> inside DSK */
+.dsk-admin a:focus {
+    border-radius: inherit;
+    box-shadow: none;
+    outline: none;
+}
+
+.dsk-admin a {
+    color: var(--dsk-green-dark);
+    text-decoration: none;
+}
+.dsk-admin a:hover {
+    text-decoration: none;
+}
+
+
+/* =============================================================================
+   3. Layout
+   ============================================================================= */
+
+.dsk-inner-layout  { display: flex; gap: 20px; align-items: flex-start; }
+
+.dsk-inner-main {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column;
+    gap: 12px;
+}
+
+.dsk-inner-aside {
+    display: flex; flex-direction: column;
+    gap: 12px; width: 280px; flex-shrink: 0;
+}
+
+.dsk-between { display: flex; align-items: center; justify-content: space-between; }
+.dsk-muted   { color: var(--dsk-text-muted); font-size: 13px; }
+
+.dsk-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--dsk-radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 22px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+
+.dsk-admin-icon                    { background-color: #95f0b9; }
+.dsk-admin-icon svg path,
+.dsk-admin-icon svg rect,
+.dsk-admin-icon svg circle         { fill: #1f2937; }
+
+/* In dark mode: lightly desaturate module icon backgrounds, force glyph to dark */
+:root.is-dsk-dark .dsk-icon:not(.dsk-admin-icon)              { filter: saturate(.8) brightness(.92); }
+:root.is-dsk-dark .dsk-icon:not(.dsk-admin-icon) .dashicons   { color: #1f2937; }
+
+
+/* =============================================================================
+   4. Sidebar & Navigation
+   ============================================================================= */
+
+.dsk-admin-aside {
+    width: 220px;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    position: relative; overflow: visible;
+    transition: width .25s ease;
+}
+
+.dsk-admin-brand {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 10px;
+    position: relative;
+}
+
+.dsk-admin-title {
+    font-size: 15px; font-weight: 600;
+    color: #111827;
+    flex: 1; white-space: nowrap; overflow: hidden;
+    transition: max-width .25s ease, opacity .15s ease;
+    max-width: 200px; opacity: 1;
+}
+
+.dsk-admin-nav     { display: flex; flex-direction: column; gap: 6px; }
+.dsk-admin-nav-top { flex: 1; padding: 24px 0; }
+
+a.dsk-tab {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; margin: 0;
+    text-decoration: none !important;
+    font-size: 14px; font-weight: 500;
+    border-radius: var(--dsk-radius-sm) !important;
+    border: 1px solid transparent;
+    transition: background .15s, color .15s, border-color .15s;
+    outline: none !important;
+    box-shadow: none !important;
+    position: relative;
+    cursor: pointer;
+}
+a.dsk-tab { color: var(--dsk-text-muted); }
+a.dsk-tab:not(.is-active):hover { background: var(--dsk-surface); color: var(--dsk-text-2); }
+a.dsk-tab:focus, .dsk-tab:active { outline: none !important; box-shadow: none !important; }
+a.dsk-tab.is-active { background: var(--dsk-surface); border-color: var(--dsk-border); color: var(--dsk-text-2); }
+a.dsk-tab .dashicons { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; color: inherit; }
+.dsk-tab-label { flex: 1; white-space: nowrap; overflow: hidden; transition: max-width .25s ease, opacity .15s ease; max-width: 200px; opacity: 1; }
+
+/* Dark mode toggle in nav — same shape as .dsk-tab */
+.dsk-theme-toggle {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    color: var(--dsk-text-muted);
+    font-size: 14px; font-weight: 500;
+    border-radius: var(--dsk-radius-sm);
+    border: 1px solid transparent;
+    background: none; cursor: pointer;
+    transition: background .15s, color .15s;
+    width: 100%; text-align: left;
+    outline: none;
+}
+.dsk-theme-toggle:hover      { background: var(--dsk-surface); color: var(--dsk-text-2); }
+.dsk-theme-toggle .dashicons { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; color: inherit; }
+.dsk-theme-toggle-label      { flex: 1; white-space: nowrap; overflow: hidden; transition: max-width .25s ease, opacity .15s ease; max-width: 200px; opacity: 1; }
+
+
+/* =============================================================================
+   5. Sidebar Collapse
+   ============================================================================= */
+
+.dsk-aside-collapse-btn {
+    flex-shrink: 0; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--dsk-surface); border: 1px solid var(--dsk-border); border-radius: 50%;
+    color: var(--dsk-text-muted); cursor: pointer; padding: 0;
+    transition: color .15s, border-color .15s, background .15s;
+    position: absolute; right: -34px; z-index: 10;
+}
+.dsk-aside-collapse-btn:hover           { color: var(--dsk-text); border-color: var(--dsk-border-hover); }
+.dsk-aside-collapse-btn svg             { width: 18px; height: 18px; transform: rotate(90deg); transition: transform .25s ease; }
+
+.dsk-admin-aside.is-collapsed,
+:root.is-dsk-aside-collapsed .dsk-admin-aside { width: 46px; }
+.dsk-admin-aside.is-collapsed .dsk-aside-collapse-btn svg,
+:root.is-dsk-aside-collapsed .dsk-aside-collapse-btn svg { transform: rotate(-90deg); }
+
+.dsk-admin-aside.is-collapsed .dsk-admin-title,
+.dsk-admin-aside.is-collapsed .dsk-tab-label,
+.dsk-admin-aside.is-collapsed .dsk-theme-toggle-label,
+:root.is-dsk-aside-collapsed .dsk-admin-title,
+:root.is-dsk-aside-collapsed .dsk-tab-label,
+:root.is-dsk-aside-collapsed .dsk-theme-toggle-label { max-width: 0; opacity: 0; }
+
+.dsk-admin-aside.is-collapsed .dsk-tab::after,
+.dsk-admin-aside.is-collapsed .dsk-theme-toggle::after,
+:root.is-dsk-aside-collapsed .dsk-tab::after,
+:root.is-dsk-aside-collapsed .dsk-theme-toggle::after {
+    content: attr(aria-label);
+    position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+    background: var(--dsk-surface-3); color: var(--dsk-text);
+    font-size: 12px; font-weight: 500; white-space: nowrap;
+    padding: 5px 10px; border-radius: var(--dsk-radius-xs);
+    border: 1px solid var(--dsk-border);
+    pointer-events: none; opacity: 0; transition: opacity .15s ease; z-index: 999;
+}
+.dsk-admin-aside.is-collapsed .dsk-tab:hover::after,
+.dsk-admin-aside.is-collapsed .dsk-theme-toggle:hover::after,
+:root.is-dsk-aside-collapsed .dsk-tab:hover::after,
+:root.is-dsk-aside-collapsed .dsk-theme-toggle:hover::after { opacity: 1; }
+
+
+/* =============================================================================
+   6. Tab Content
+   ============================================================================= */
+
+.dsk-admin-main { flex: 1; padding: 0 20px; overflow-y: hidden; position: relative; }
+
+.dsk-tab-content {
+    box-sizing: border-box; height: 100%;
+    background: var(--dsk-surface);
+    padding: 28px 24px 16px 28px;
+    border-radius: var(--dsk-radius);
+    border: 1px solid var(--dsk-border);
+    display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+    transition: background .2s, border-color .2s;
+}
+
+.dsk-tab-header {
+    display: flex; flex: 0 0 auto;
+    align-items: center; gap: 16px;
+    margin-bottom: 16px; padding-right: 10px;
+}
+
+.dsk-tab-title        { flex: 1 1 auto; min-width: 0; }
+.dsk-tab-title h1     { font-size: 20px; font-weight: 600; color: var(--dsk-text); margin: 0 0 6px; }
+.dsk-tab-title p      { font-size: 13px; color: var(--dsk-text-muted); margin: 0; }
+
+/* Alt header */
+.dsk-tab-content:has(.dsk-tab-header-alt) { padding-top: 22px; }
+
+.dsk-tab-header-alt {
+    display: flex; flex: 0 0 auto; align-items: center;
+    gap: 16px; padding-right: 20px;
+    background: var(--dsk-surface-neg);
+    border-radius: var(--dsk-radius-sm);
+    border: 1px solid var(--dsk-border);
+}
+.is-dsk-dark .dsk-tab-header-alt { background: var(--dsk-surface-neg); }
+
+.dsk-tab-header-alt .dsk-tab-title    { flex: 1 1 auto; min-width: 0; padding: 14px 0 14px 20px; }
+.dsk-tab-header-alt .dsk-tab-title h1 { font-size: 20px; font-weight: 600; color: var(--dsk-text-neg); margin: 2px 0 4px; }
+.dsk-tab-header-alt .dsk-tab-title p  { font-size: 13px; color: var(--dsk-text-muted); margin: 0; }
+
+.dsk-tools { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; }
+
+.dsk-tab-inner {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: scroll; padding: 16px 0;
+    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,1) transparent; scrollbar-gutter: stable;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+    mask-image:         linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+    transition: scrollbar-color .2s;
+}
+:root.is-dsk-dark .dsk-tab-inner { scrollbar-color: rgba(29,35,39,1) transparent; }
+.dsk-tab-inner::-webkit-scrollbar       { width: 10px; }
+.dsk-tab-inner::-webkit-scrollbar-track { background: transparent; }
+.dsk-tab-inner::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.dsk-tab-content h3 { font-size: 14px; font-weight: 600; color: var(--dsk-text); margin: 0; }
+.dsk-tab-content h4 { margin: 12px 0; color: var(--dsk-text-2); }
+
+.dsk-editor {
+    flex: 0 0 auto; height: calc(100vh - 220px); min-height: 0;
+    display: flex; flex-direction: column; padding: 20px 20px 10px;
+}
+
+
+/* =============================================================================
+   7. Cards
+   ============================================================================= */
+
+.dsk-cards { display: flex; flex-direction: column; gap: 8px; }
+
+.dsk-card {
+    background: var(--dsk-surface-2);
+    border: 1px solid var(--dsk-border);
+    border-radius: var(--dsk-radius-sm);
+    padding: 16px;
+    transition: background .2s, border-color .2s;
+}
+
+.dsk-card-head { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+.dsk-card-head h3 { margin: 0; }
+
+
+/* =============================================================================
+   8. Lists
+   ============================================================================= */
+
+.dsk-list-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+
+
+/* =============================================================================
+   9. Forms & Inputs
+   ============================================================================= */
+
+.dsk-tab-content input.dsk-input,
+.dsk-tab-content textarea.dsk-input {
+    width: 100%; padding: 7px 12px;
+    background: var(--dsk-surface-2);
+    border: 1px solid var(--dsk-border);
+    border-radius: var(--dsk-radius-xs);
+    font-size: 13px; font-weight: 500;
+    line-height: 1.5; min-height: unset;
+    color: var(--dsk-text);
+    margin: 0;
+    transition: border-color .15s, background .15s;
+}
+.dsk-tab-content input.dsk-input:focus,
+.dsk-tab-content textarea.dsk-input:focus {
+    outline: none; box-shadow: none;
+    border-color: var(--dsk-border-active);
+    background: var(--dsk-surface);
+}
+
+
+/* =============================================================================
+   10. Buttons
+   ============================================================================= */
+ 
+/* ── Shared button base — kills WP overrides ─────────────────────────── */
+.dsk-admin .button,
+.dsk-admin .button-primary {
+    border-radius: var(--dsk-radius-sm) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    text-shadow: none;
+    vertical-align: middle;
+    font-weight: 500; line-height: 26px;
+    font-size: 13px;
+    min-height: 36px; cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s, opacity .2s;
+}
+ 
+/* Primary */
+.dsk-admin .button-primary,
+.dsk-admin .button-primary:visited {
+    background: var(--dsk-green-dark);
+    border-color: var(--dsk-green-dark);
+    color: #fff;
+    padding: 5px 16px;
+    min-width: 90px;
+}
+.dsk-admin .button-primary:hover,
+.dsk-admin .button-primary:focus {
+    background: #3db36a;
+    border-color: #3db36a;
+    color: #fff;
+}
+.dsk-admin .button-primary:active,
+.dsk-admin .button-primary.active {
+    background: #359e5e;
+    border-color: #359e5e;
+    color: #fff;
+}
+.dsk-admin .button-primary:disabled,
+.dsk-admin .button-primary.is-busy { opacity: .6; cursor: not-allowed; }
+ 
+/* Secondary */
+.dsk-admin .button:not(.button-primary):not(.dsk-danger),
+.dsk-admin .button-secondary {
+    background: var(--dsk-surface-2);
+    border: 1px solid var(--dsk-border);
+    color: var(--dsk-text-2);
+    padding: 5px 16px;
+}
+.dsk-admin .button:not(.button-primary):not(.dsk-danger):hover,
+.dsk-admin .button-secondary:hover {
+    background: var(--dsk-surface-3);
+    border-color: var(--dsk-border-hover);
+    color: var(--dsk-text);
+}
+ 
+/* Danger */
+.dsk-admin .button.dsk-danger {
+    background: transparent;
+    border-color: var(--dsk-border);
+    color: var(--dsk-text-muted);
+    padding: 5px 16px;
+    min-width: 90px;
+}
+.dsk-admin .button.dsk-danger:hover,
+.dsk-admin .button.dsk-danger:focus         { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+.is-dsk-dark .dsk-admin .button.dsk-danger:hover,
+.is-dsk-dark .dsk-admin .button.dsk-danger:focus { background: #3b0f0f; border-color: #7f1d1d; color: #fca5a5; }
+.dsk-admin .button.dsk-danger:active        { background: #dc2626; border-color: #dc2626; color: #fff; }
+
+/* Chip */
+.dsk-btn-chip {
+    padding: 4px 12px; min-width: 72px;
+    background: var(--dsk-surface-2);
+    border: 1px solid var(--dsk-border);
+    border-radius: var(--dsk-radius-xs);
+    font-size: 12px; font-weight: 500;
+    color: var(--dsk-text-muted);
+    cursor: pointer;
+    transition: color .2s, border-color .2s, background .2s;
+}
+.dsk-btn-chip:hover           { color: var(--dsk-text); border-color: var(--dsk-border-hover); background: var(--dsk-surface); }
+.dsk-btn-chip.is-active       { color: var(--dsk-text); background: var(--dsk-surface); border-color: var(--dsk-border-active); }
+.dsk-btn-chip.is-active:hover { border-color: var(--dsk-border-active); }
+
+.dsk-btn-small { padding: 4px 14px; font-size: 13px; min-width: 80px; }
+
+
+/* =============================================================================
+   11. Badge
+   ============================================================================= */
+
+.dsk-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; padding: 0 6px;
+    background: var(--dsk-surface-3);
+    border: 1px solid var(--dsk-border);
+    border-radius: 10px;
+    font-size: 11px; font-weight: 600;
+    color: var(--dsk-text-muted);
+    transition: background .2s, border-color .2s;
+}
+
+
+/* =============================================================================
+   12. Toggle Switch
+   ============================================================================= */
+
+.dsk-switch                { position: relative; display: inline-block; width: 44px; height: 22px; }
+.dsk-switch input          { opacity: 0; width: 0; height: 0; }
+
+.dsk-slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: var(--dsk-surface-3);
+    border: 1px solid var(--dsk-border);
+    border-radius: 22px;
+    transition: background .2s, border-color .2s;
+}
+.dsk-slider::before {
+    content: ""; position: absolute;
+    width: 16px; height: 16px;
+    left: 2px; bottom: 2.5px;
+    background: var(--dsk-text-faint);
+    border-radius: 50%;
+    transition: transform .2s, background .2s;
+}
+.dsk-switch input:checked + .dsk-slider             { background: var(--dsk-green-dark); border-color: var(--dsk-green-dark); }
+.dsk-switch input:checked + .dsk-slider::before     { transform: translateX(22px); background: #fff; }
+
+/* Small variant */
+.dsk-switch.switch-small,
+.switch-small > .dsk-switch                                         { width: 32px; height: 17px; }
+.dsk-switch.switch-small .dsk-slider,
+.switch-small > .dsk-switch .dsk-slider                             { border-radius: 17px; }
+.dsk-switch.switch-small .dsk-slider::before,
+.switch-small > .dsk-switch .dsk-slider::before                     { width: 12px; height: 12px; bottom: 1.75px; }
+.dsk-switch.switch-small input:checked + .dsk-slider::before,
+.switch-small > .dsk-switch input:checked + .dsk-slider::before     { transform: translateX(15px); }
+
+
+/* =============================================================================
+   13. Collapsible
+   ============================================================================= */
+
+.dsk-toggle {
+    background: none; border: none; padding: 0;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--dsk-text-muted);
+    transition: transform .2s, color .15s;
+}
+.dsk-toggle svg                   { width: 20px; height: 20px; }
+.dsk-toggle:hover                 { color: var(--dsk-text); }
+.dsk-toggle[aria-expanded="true"] { transform: rotate(180deg); }
+
+.dsk-collapsible       { overflow: hidden; transition: max-height .3s ease; }
+.dsk-collapsible-inner { padding-top: 10px; }
+
+
+/* =============================================================================
+   14. Loaders
+   ============================================================================= */
+
+.dsk-tab-content.is-loading { display: flex; align-items: center; justify-content: center; }
+
+.dsk-spinner {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0%, var(--dsk-green) 100%);
+    -webkit-mask: radial-gradient(circle, transparent 55%, #000 56%);
+    mask:         radial-gradient(circle, transparent 55%, #000 56%);
+    animation: dsk-spin .7s linear infinite; opacity: .8;
+}
+@keyframes dsk-spin { to { transform: rotate(360deg); } }
+
+.dsk-loading { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; }
+.dsk-loading span {
+    display: block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--dsk-green-dark);
+    animation: dsk-wave .9s ease-in-out infinite;
+}
+.dsk-loading span:nth-child(2) { animation-delay: .15s; }
+.dsk-loading span:nth-child(3) { animation-delay: .30s; }
+
+@keyframes dsk-wave {
+    0%, 100% { transform: translateY(0);    opacity: .4; }
+    50%       { transform: translateY(-7px); opacity: 1; }
+}
+
+@keyframes dsk-fade-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.dsk-tab-content:not(.is-ready) .dsk-tab-header,
+.dsk-tab-content:not(.is-ready) .dsk-dashboard-tabs,
+.dsk-tab-content:not(.is-ready) .dsk-subtabs,
+.dsk-tab-content:not(.is-ready) .dsk-tab-inner {
+    opacity: 0;
+}
+.dsk-tab-content.is-ready .dsk-tab-header,
+.dsk-tab-content.is-ready .dsk-dashboard-tabs,
+.dsk-tab-content.is-ready .dsk-subtabs,
+.dsk-tab-content.is-ready .dsk-tab-inner {
+    animation: dsk-fade-in .2s ease forwards;
+}
+
+
+/* =============================================================================
+   15. Modules / Dashboard
+   ============================================================================= */
+
+.dsk-empty-state {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 40px 32px;
+    gap: 12px;
+}
+.dsk-empty-state .dashicons {
+    font-size: 36px; width: 36px; height: 36px;
+    color: var(--dsk-text-faint);
+}
+.dsk-empty-state-title {
+    font-size: 14px; font-weight: 700;
+    color: var(--dsk-text); margin: 0;
+    max-width: 480px;
+}
+.dsk-empty-state-desc {
+    font-size: 13px; color: var(--dsk-text-muted);
+    margin: 0; line-height: 1.6; max-width: 450px;
+}
+.dsk-empty-state-actions {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    justify-content: center; margin-top: 4px;
+}
+
+.dsk-dashboard-tabs {
+    display: flex; gap: 6px;
+    flex: 0 0 auto; margin-bottom: 12px;
+}
+
+.dsk-modules-list,
+.dsk-components-list,
+.dsk-settings-list { display: flex; flex-direction: column; gap: 8px; }
+
+.dsk-module-row,
+.dsk-component-row,
+.dsk-setting-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 14px;
+    background: var(--dsk-surface-2);
+    border: 1px solid var(--dsk-border);
+    border-radius: var(--dsk-radius);
+    transition: border-color .15s, opacity .25s, background .2s;
+}
+
+.dsk-module-row.is-pending,
+.dsk-component-row.is-pending,
+.dsk-setting-row.is-pending { opacity: .45; }
+
+.dsk-module-content,
+.dsk-component-content,
+.dsk-setting-content { flex: 1; min-width: 0; }
+
+.dsk-tab-content .dsk-module-name,
+.dsk-tab-content .dsk-component-name,
+.dsk-tab-content .dsk-setting-name {
+    font-size: 14px; font-weight: 600;
+    color: var(--dsk-text); 
+}
+.dsk-tab-content .dsk-module-name {margin: 0px;}
+.dsk-tab-content .dsk-component-name,
+.dsk-tab-content .dsk-setting-name {margin: 0 0 3px;}
+
+.dsk-module-description,
+.dsk-component-description,
+.dsk-setting-description {
+    font-size: 13px; color: var(--dsk-text-muted);
+    margin: 0; line-height: 1.4;
+}
+
+.dsk-module-toggle,
+.dsk-component-toggle,
+.dsk-setting-toggle { flex-shrink: 0; }
+
+.dsk-empty-state      { padding: 60px 20px; text-align: center; color: var(--dsk-text-muted); }
+
+.dsk-modules-footer { margin-top: 16px; font-size: 13px; color: var(--dsk-text-muted); text-align: center; }
+.dsk-modules-footer a { color: var(--dsk-text-muted); text-decoration: none; font-weight: 600; }
+.dsk-modules-footer a:hover { color: var(--dsk-green-dark); }
+
+.dsk-tag-group + .dsk-tag-group { margin-top: 20px; }
+
+.dsk-tag-group-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--dsk-text-faint);
+    margin: 0;
+}
+
+.dsk-module-header {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.dsk-module-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ── Notices ─────────────────────────────────────────────────────────────── */
+ 
+.dsk-notices {
+    position: absolute; top: 16px; left: 0; right: 0;
+    z-index: 9000;
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 0 20px 0 0;
+    pointer-events: none;
+}
+ 
+.dsk-notice {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--dsk-radius-sm);
+    border: 1px solid transparent;
+    font-size: 13px; font-weight: 500;
+    pointer-events: all;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.08);
+    animation: dsk-fade-in .2s ease forwards;
+}
+ 
+.dsk-notice--info    { background: var(--dsk-surface-green); border-color: var(--dsk-border-active); color: var(--dsk-text); }
+.dsk-notice--success { background: var(--dsk-surface-green); border-color: var(--dsk-border-active); color: var(--dsk-text); }
+.dsk-notice--warning { background: #fef9ec; border-color: #f5c842; color: #7a5c00; }
+:root.is-dsk-dark .dsk-notice--warning { background: #2a2000; border-color: #7a6000; color: #f5d060; }
+ 
+.dsk-notice-message  { flex: 1; }
+ 
+.dsk-notice-tab-link {
+    font-weight: 600; color: var(--dsk-green-dark);
+    text-decoration: none; white-space: nowrap;
+}
+.dsk-notice-tab-link:hover { text-decoration: underline; }
+ 
+.dsk-notice-close {
+    background: none; border: none; padding: 0;
+    width: 20px; height: 20px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--dsk-radius-xs);
+    font-size: 16px; line-height: 1;
+    color: var(--dsk-text-muted); cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.dsk-notice-close:hover { background: var(--dsk-surface-3); color: var(--dsk-text); }
+ 
+/* Tab badge dot */
+.dsk-tab.has-notice .dashicons {
+    position: relative;
+}
+.dsk-tab.has-notice .dashicons::after {
+    content: '';
+    position: absolute; top: -3px; right: -3px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--dsk-green-dark);
+    border: 2px solid var(--dsk-surface);
+}
+
+/* ── Module info button ─────────────────────────────────────────────────── */
+
+.dsk-module-info-btn {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--dsk-border);
+    background: var(--dsk-surface-3);
+    color: var(--dsk-text-muted);
+    font-size: 12px; font-weight: 700; line-height: 1;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+    display: flex; align-items: center; justify-content: center;
+}
+.dsk-module-info-btn:hover { border-color: var(--dsk-border-active); color: var(--dsk-green-dark); background: var(--dsk-surface); }
+
+/* ── Modal ──────────────────────────────────────────────────────────────── */
+.dsk-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.dsk-modal {
+    background: var(--dsk-surface);
+    border: 1px solid var(--dsk-border);
+    border-radius: var(--dsk-radius);
+    box-shadow: var(--dsk-shadow-md);
+    width: 480px;
+    max-width: calc(100vw - 40px);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: dsk-fade-in .15s ease forwards;
+}
+.dsk-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--dsk-border);
+    flex-shrink: 0;
+}
+.dsk-modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dsk-text);
+    margin: 0;
+    padding-right: 12px;
+}
+.dsk-modal-close {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--dsk-radius-xs);
+    font-size: 18px;
+    line-height: 1;
+    color: var(--dsk-text-muted);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+}
+.dsk-modal-close:hover {
+    background: var(--dsk-surface-3);
+    color: var(--dsk-text);
+}
+.dsk-modal-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--dsk-text-2);
+}
+.dsk-modal-body p {
+    margin: 0 0 10px;
+}
+.dsk-modal-body p:last-child {
+    margin-bottom: 0;
+}
+.dsk-modal-body a {
+    color: var(--dsk-green-dark);
+}
+.dsk-modal-body ul,
+.dsk-modal-body ol {
+    padding-left: 20px;
+    margin: 0 0 10px;
+}
+.dsk-modal-body strong {
+    color: var(--dsk-text);
+}
+
+.dsk-tag {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    background: var(--tag-color);
+    color: #1f2937;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+:root.is-dsk-dark .dsk-tag { filter: saturate(.75) brightness(.85); color: #1f2937; }
+.dsk-empty-state code { background: var(--dsk-surface-2); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+
+/* =============================================================================
+   16. Sub Tabs
+   ============================================================================= */
+
+.dsk-subtabs {
+    display: flex; flex-wrap: wrap;
+    gap: 6px; flex: 0 0 auto;
+    margin-bottom: 10px;
+}
+
+.dsk-subtab-chip {
+    padding: 6px 14px;
+    border-radius: var(--dsk-radius);
+    border: 1px solid var(--dsk-border);
+    background: var(--dsk-surface-2);
+    color: var(--dsk-text-muted);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: background .15s, color .15s, border-color .15s;
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 30px;
+}
+.dsk-subtab-chip .dsk-badge           { transition: background .15s, color .15s, border-color .15s; }
+.dsk-subtab-chip:hover                { background: var(--dsk-surface); color: var(--dsk-text-2); border-color: var(--dsk-border-hover); }
+.dsk-subtab-chip.is-active            { background: var(--dsk-surface-green); color: var(--dsk-text); border-color: var(--dsk-border-active); }
+.dsk-subtab-chip.is-active .dsk-badge { background: var(--dsk-surface); }
+.dsk-subtab-chip:focus                { outline: none; box-shadow: none; }
+
+/* display controlled entirely by JS via DSK.initSubtabs() */
+
+@keyframes dsk-tab-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.dsk-subtab-panel.is-active { animation: dsk-tab-in .2s ease forwards; }
+
+
+/* =============================================================================
+   17. Select2 Overrides
+   ============================================================================= */
+
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid var(--dsk-border);
+    background: var(--dsk-surface);
+    transition: border-color .15s, background .15s;
+}
+
+.select2-container--default .select2-selection--single   { height: 32px; border-radius: var(--dsk-radius-sm) !important; }
+.select2-container--default .select2-selection--multiple { min-height: 32px; border-radius: var(--dsk-radius-sm); padding: 5px 8px; }
+
+.select2-container--default .select2-selection--single .select2-selection__rendered           { line-height: 32px; padding-left: 12px; padding-right: 40px; color: var(--dsk-text); font-weight: 500; }
+.select2-container--default .select2-selection--single .select2-selection__rendered .select2-selection__placeholder { color: var(--dsk-text-faint); }
+.select2-container--default .select2-selection--single .select2-selection__arrow              { height: 32px; width: 34px; right: 6px; top: 0; }
+.select2-container--default .select2-selection--single .select2-selection__arrow b            { border-color: var(--dsk-text-muted) transparent transparent; }
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered                         { padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; min-height: 30px; }
+.select2-container--default .select2-selection--multiple .select2-selection__rendered > .select2-search--inline { order: -1; flex: 0 0 100%; width: 100%; }
+.select2-container--default .select2-search--inline                                                           { margin: 0; }
+.select2-container--default .select2-search--inline .select2-search__field                                    { width: 100% !important; margin: 0; height: 30px; line-height: 30px; font-size: 13px; padding: 0 6px; color: var(--dsk-text); background: transparent; }
+.select2-container--default .select2-search--inline .select2-search__field::placeholder                       { color: var(--dsk-text-faint); }
+.select2-container--default .select2-selection--multiple .select2-selection__choice                           { margin: 0; border: 1px solid var(--dsk-border); background: var(--dsk-surface-3); border-radius: 999px; padding: 4px 8px; font-size: 12px; color: var(--dsk-text); }
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove                   { margin-right: 6px; color: var(--dsk-text-muted); }
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover             { color: var(--dsk-text); }
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open  .select2-selection--single,
+.select2-container--default.select2-container--focus .select2-selection--multiple,
+.select2-container--default.select2-container--open  .select2-selection--multiple { border-color: var(--dsk-border-active); }
+
+.select2-container--default.select2-container--open .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--multiple  { background: var(--dsk-surface); }
+
+.select2-dropdown                                { border: 1px solid var(--dsk-border); border-radius: var(--dsk-radius-sm) !important; box-shadow: var(--dsk-shadow-md); overflow: hidden; background: var(--dsk-surface); }
+.select2-search--dropdown                        { padding: 10px; border-bottom: 1px solid var(--dsk-border); background: var(--dsk-surface); }
+.select2-search--dropdown .select2-search__field,
+.select2-search--dropdown input[type="search"] {
+    width: 100% !important;
+    height: 32px !important;
+    padding: 0 10px !important;
+    border: 1px solid var(--dsk-border) !important;
+    border-radius: var(--dsk-radius-xs) !important;
+    background: var(--dsk-surface-2) !important;
+    color: var(--dsk-text) !important;
+    font-size: 13px !important;
+    font-family: inherit !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+}
+.select2-search--dropdown .select2-search__field:focus,
+.select2-search--dropdown input[type="search"]:focus {
+    border-color: var(--dsk-border-active) !important;
+    box-shadow: none !important;
+}
+.select2-results__options                        { padding: 0; }
+.select2-results__option                         { padding: 8px 12px; margin: 0; font-weight: 500; color: var(--dsk-text); background: var(--dsk-surface);cursor: pointer; }
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] { background: var(--dsk-surface-3); color: var(--dsk-text); }
+.select2-results__option[aria-selected="true"]                                    { background: var(--dsk-surface-2); }
+.select2-container--default .select2-results__option--selected                   { background: var(--dsk-surface-2); }
